@@ -1,5 +1,10 @@
 # ВКР — Повышение энергоэффективности систем жизнеобеспечения кинозала
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Code Style](https://img.shields.io/badge/code%20style-black-black)]()
+[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen)]()
+
 **Магистерская диссертация** | ИТМО | Направление 13.04.02 «Электроэнергетика и электротехника» | 2026 г.
 
 ---
