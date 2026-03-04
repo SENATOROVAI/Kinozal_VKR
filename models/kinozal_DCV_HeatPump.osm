@@ -167,7 +167,7 @@ OS:Construction,
 
 OS:ThermalZone,
   {5391a1ae-6e7e-4c99-a74a-28a6711a0519}, !- Handle
-  Кинозал_135мест_DCV_HP,         !- Name
+  Кинозал_135мест_DCV_HP,      !- Name
   ,                                       !- Multiplier
   ,                                       !- Ceiling Height {m}
   ,                                       !- Volume {m3}
@@ -270,7 +270,7 @@ OS:ZoneHVAC:EquipmentList,
 
 OS:Space,
   {16ecba5e-6675-4f2e-aa4b-f8545c798332}, !- Handle
-  Зал_DCV_HP,                             !- Name
+  Зал_DCV_HP,                          !- Name
   ,                                       !- Space Type Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
@@ -395,7 +395,7 @@ OS:ScheduleTypeLimits,
 
 OS:Schedule:Ruleset,
   {056eb53a-230b-4a6c-b178-2524144f00bf}, !- Handle
-  Заполняемость_DCV_HP,         !- Name
+  Заполняемость_DCV_HP,      !- Name
   {44bc077c-b6fc-4cb8-a70c-00b43a779f22}, !- Schedule Type Limits Name
   {3405fe67-a189-4b11-a53a-664f3ccc774c}; !- Default Day Schedule Name
 
@@ -579,7 +579,7 @@ OS:ScheduleTypeLimits,
 
 OS:Schedule:Ruleset,
   {77fd1a5b-85fa-44bf-990d-3805eeca86e3}, !- Handle
-  Освещение_DCV_HP,                 !- Name
+  Освещение_DCV_HP,              !- Name
   {1c83c598-f407-4811-91c5-bad41ce97907}, !- Schedule Type Limits Name
   {b3460791-e94f-4285-bf64-65d2e83df5f5}; !- Default Day Schedule Name
 
@@ -763,7 +763,7 @@ OS:ScheduleTypeLimits,
 
 OS:Schedule:Ruleset,
   {cff167a7-f7d5-4c46-a53e-4ee26220cab3}, !- Handle
-  Вентиляция_DCV_HP,               !- Name
+  Вентиляция_DCV_HP,            !- Name
   {ad1bb1b2-0795-4311-bb27-148e46146dd7}, !- Schedule Type Limits Name
   {66f47487-de38-4c53-b484-b154286b0e26}; !- Default Day Schedule Name
 
@@ -939,31 +939,31 @@ OS:Schedule:Day,
 
 OS:Schedule:Constant,
   {3af449a6-1126-4d61-ae2a-664adc664c80}, !- Handle
-  Активность_DCV_HP,               !- Name
+  Активность_DCV_HP,            !- Name
   {ab6ee7d1-7f17-4956-a6b2-60584611deb5}, !- Schedule Type Limits Name
   115;                                    !- Value
 
 OS:Schedule:Constant,
   {31cb3398-c74f-4e17-b72b-e2e3097891d4}, !- Handle
-  Уставка_отопл_DCV_HP,          !- Name
+  Уставка_отопл_DCV_HP,       !- Name
   {a0dfccc2-aaea-46d6-bb9d-df7982c59393}, !- Schedule Type Limits Name
   18;                                     !- Value
 
 OS:Schedule:Constant,
   {ef152706-922b-4cb3-a475-5acbc0fa0418}, !- Handle
-  Уставка_охл_DCV_HP,              !- Name
+  Уставка_охл_DCV_HP,           !- Name
   {a0dfccc2-aaea-46d6-bb9d-df7982c59393}, !- Schedule Type Limits Name
   26;                                     !- Value
 
 OS:Schedule:Constant,
   {ef83c62d-a520-48e4-bdb4-6b0258024573}, !- Handle
-  t_приточного_DCV_HP,             !- Name
+  t_приточного_DCV_HP,          !- Name
   {a0dfccc2-aaea-46d6-bb9d-df7982c59393}, !- Schedule Type Limits Name
   18;                                     !- Value
 
 OS:People:Definition,
   {8b8742de-2441-4855-afa3-7507934922de}, !- Handle
-  Зрители_DCV_HP,                     !- Name
+  Зрители_DCV_HP,                  !- Name
   People,                                 !- Number of People Calculation Method
   135,                                    !- Number of People {people}
   ,                                       !- People per Space Floor Area {person/m2}
@@ -973,7 +973,7 @@ OS:People:Definition,
 
 OS:People,
   {301f20e7-056b-472c-a389-576c97bf2403}, !- Handle
-  Люди_DCV_HP,                           !- Name
+  Люди_DCV_HP,                        !- Name
   {8b8742de-2441-4855-afa3-7507934922de}, !- People Definition Name
   {16ecba5e-6675-4f2e-aa4b-f8545c798332}, !- Space or SpaceType Name
   {056eb53a-230b-4a6c-b178-2524144f00bf}, !- Number of People Schedule Name
@@ -1002,7 +1002,7 @@ OS:Lights:Definition,
 
 OS:Lights,
   {88551cf8-87e3-420c-967a-50e0a3cc757e}, !- Handle
-  Освещение_DCV_HP,                 !- Name
+  Освещение_DCV_HP,              !- Name
   {41d0be19-065e-406a-8631-4b4e6988d3f2}, !- Lights Definition Name
   {16ecba5e-6675-4f2e-aa4b-f8545c798332}, !- Space or SpaceType Name
   {77fd1a5b-85fa-44bf-990d-3805eeca86e3}, !- Schedule Name
@@ -1022,7 +1022,7 @@ OS:ElectricEquipment:Definition,
 
 OS:ElectricEquipment,
   {a2d795ca-f58f-49f2-b235-ad1ab32e2f38}, !- Handle
-  Проектор_DCV_HP,                   !- Name
+  Проектор_DCV_HP,                !- Name
   {c2a8d2aa-ea79-4f77-87a2-4f3e41c69385}, !- Electric Equipment Definition Name
   {16ecba5e-6675-4f2e-aa4b-f8545c798332}, !- Space or SpaceType Name
   {77fd1a5b-85fa-44bf-990d-3805eeca86e3}, !- Schedule Name
@@ -1031,7 +1031,7 @@ OS:ElectricEquipment,
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e78c286c-9185-4f22-bb0a-9bce25ce41f3}, !- Handle
-  Инфильтрация_DCV_HP,           !- Name
+  Инфильтрация_DCV_HP,        !- Name
   {16ecba5e-6675-4f2e-aa4b-f8545c798332}, !- Space or SpaceType Name
   ,                                       !- Schedule Name
   Flow/ExteriorArea,                      !- Design Flow Rate Calculation Method
@@ -1047,7 +1047,7 @@ OS:SpaceInfiltration:DesignFlowRate,
 
 OS:DesignSpecification:OutdoorAir,
   {3ca66e1f-3b87-483d-aa0e-103f3fe583f6}, !- Handle
-  ОА_спец_DCV_HP,                      !- Name
+  ОА_спец_DCV_HP,                   !- Name
   Sum,                                    !- Outdoor Air Method
   0.00833,                                !- Outdoor Air Flow per Person {m3/s-person}
   0,                                      !- Outdoor Air Flow per Floor Area {m3/s-m2}
@@ -1057,7 +1057,7 @@ OS:DesignSpecification:OutdoorAir,
 
 OS:ThermostatSetpoint:DualSetpoint,
   {4a045677-84ba-4419-8672-0eb1fd88c53a}, !- Handle
-  Термостат_DCV_HP,                 !- Name
+  Термостат_DCV_HP,              !- Name
   {31cb3398-c74f-4e17-b72b-e2e3097891d4}, !- Heating Setpoint Temperature Schedule Name
   {ef152706-922b-4cb3-a475-5acbc0fa0418}; !- Cooling Setpoint Temperature Schedule Name
 
@@ -1071,7 +1071,7 @@ OS:ScheduleTypeLimits,
 
 OS:AirLoopHVAC,
   {3b8c7395-b060-4a76-995a-87efdc15968d}, !- Handle
-  П1В1_AIRNED_M6L_DCV_HP,                  !- Name
+  П1В1_AIRNED_M6L_DCV_HP,               !- Name
   ,                                       !- Controller List Name
   {02393a5d-cc3e-4460-a290-240875890581}, !- Availability Schedule
   {ae1c70b8-4b2c-4d66-8505-fd1828757e24}, !- Availability Manager List Name
@@ -1236,7 +1236,7 @@ OS:AvailabilityManagerAssignmentList,
 
 OS:HeatExchanger:AirToAir:SensibleAndLatent,
   {9d60447c-0587-4b41-b25b-34f1e3200e93}, !- Handle
-  Рекуператор_RRS_DCV_HP,         !- Name
+  Рекуператор_RRS_DCV_HP,      !- Name
   {02393a5d-cc3e-4460-a290-240875890581}, !- Availability Schedule
   autosize,                               !- Nominal Supply Air Flow Rate {m3/s}
   0.0,                                    !- Sensible Effectiveness at 100% Heating Air Flow {dimensionless}
@@ -1255,10 +1255,10 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
   ,                                       !- Initial Defrost Time Fraction {dimensionless}
   ,                                       !- Rate of Defrost Time Fraction Increase {1/K}
   No,                                     !- Economizer Lockout
-  , !- Sensible Effectiveness of Heating Air Flow Curve Name
-  , !- Latent Effectiveness of Heating Air Flow Curve Name
-  , !- Sensible Effectiveness of Cooling Air Flow Curve Name
-  ; !- Latent Effectiveness of Cooling Air Flow Curve Name
+  ,                                       !- Sensible Effectiveness of Heating Air Flow Curve Name
+  ,                                       !- Latent Effectiveness of Heating Air Flow Curve Name
+  ,                                       !- Sensible Effectiveness of Cooling Air Flow Curve Name
+  ;                                       !- Latent Effectiveness of Cooling Air Flow Curve Name
 
 OS:Table:IndependentVariable,
   {0d3a7333-54c7-46b6-8b06-d897fdc18a3f}, !- Handle
@@ -1402,7 +1402,7 @@ OS:ModelObjectList,
 
 OS:Coil:Heating:Water,
   {4e6cb3c2-d9d4-4979-bb8e-5ac014fa6a82}, !- Handle
-  Калорифер_П1_DCV_HP,             !- Name
+  Калорифер_П1_DCV_HP,          !- Name
   {02393a5d-cc3e-4460-a290-240875890581}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -1427,7 +1427,7 @@ OS:Connection,
 
 OS:Fan:VariableVolume,
   {5650fa37-e16d-49a1-ba75-0597554399b9}, !- Handle
-  Вент_П1_VAV_DCV_HP,                   !- Name
+  Вент_П1_VAV_DCV_HP,                !- Name
   {cff167a7-f7d5-4c46-a53e-4ee26220cab3}, !- Availability Schedule Name
   0.65,                                   !- Fan Total Efficiency
   500,                                    !- Pressure Rise {Pa}
@@ -1468,14 +1468,14 @@ OS:Connection,
 
 OS:SetpointManager:Scheduled,
   {872e5ac8-c905-4a99-82d0-f475c2a24b22}, !- Handle
-  СПМ_t_подачи_DCV_HP,              !- Name
+  СПМ_t_подачи_DCV_HP,           !- Name
   Temperature,                            !- Control Variable
   {ef83c62d-a520-48e4-bdb4-6b0258024573}, !- Schedule Name
   {33fee46f-bf9d-46b2-99e6-1b6a369679aa}; !- Setpoint Node or NodeList Name
 
 OS:Controller:OutdoorAir,
   {24edba2c-a825-45ec-8015-bfffb4c4beaa}, !- Handle
-  Контроллер_НВ_DCV_HP,          !- Name
+  Контроллер_НВ_DCV_HP,       !- Name
   ,                                       !- Relief Air Outlet Node Name
   ,                                       !- Return Air Node Name
   ,                                       !- Mixed Air Node Name
@@ -1512,7 +1512,7 @@ OS:Controller:MechanicalVentilation,
 
 OS:AirLoopHVAC:OutdoorAirSystem,
   {e27dd05e-405d-4261-bdfb-0c58b3d78474}, !- Handle
-  ОА_система_DCV_HP,                !- Name
+  ОА_система_DCV_HP,             !- Name
   {24edba2c-a825-45ec-8015-bfffb4c4beaa}, !- Controller Name
   ,                                       !- Outdoor Air Equipment List Name
   ,                                       !- Availability Manager List Name
@@ -1576,7 +1576,7 @@ OS:Connection,
 
 OS:AirTerminal:SingleDuct:VAV:NoReheat,
   {a00b3e08-cbbd-4db1-86b6-85c0b2f1206b}, !- Handle
-  Терминал_VAV_DCV_HP,               !- Name
+  Терминал_VAV_DCV_HP,            !- Name
   {cff167a7-f7d5-4c46-a53e-4ee26220cab3}, !- Availability Schedule Name
   {70a8c405-9f1f-4c04-b1ed-c6dbf831b3ec}, !- Air Outlet Node Name
   {43b54caf-b1f6-4b2e-8a0d-3b99cfb5601e}, !- Air Inlet Node Name
@@ -1833,7 +1833,7 @@ OS:Schedule:Day,
 
 OS:ZoneControl:ContaminantController,
   {924ffc2e-abfd-4ece-a1bc-7acbd9e90cb4}, !- Handle
-  CO2_контроллер_DCV_HP,           !- Name
+  CO2_контроллер_DCV_HP,        !- Name
   {5391a1ae-6e7e-4c99-a74a-28a6711a0519}, !- Controlled Zone Name
   {6a833439-10e2-4442-b56f-27a14a9c15ba}, !- Carbon Dioxide Control Availability Schedule Name
   {5dde1cc8-acfb-4d0d-b022-5b480a5036d1}, !- Carbon Dioxide Setpoint Schedule Name
@@ -1843,7 +1843,7 @@ OS:ZoneControl:ContaminantController,
 
 OS:PlantLoop,
   {921b6430-3a26-4e08-82b6-b9605a73da53}, !- Handle
-  ИТП_DCV_HP,                             !- Name
+  ИТП_DCV_HP,                          !- Name
   ,                                       !- Fluid Type
   0,                                      !- Glycol Concentration
   ,                                       !- User Defined Fluid Type
@@ -2016,7 +2016,7 @@ OS:AvailabilityManagerAssignmentList,
 
 OS:Schedule:Constant,
   {db9834b2-a7aa-4562-a291-b86f105d6a30}, !- Handle
-  Уставка_ИТП_DCV_HP,              !- Name
+  Уставка_ИТП_DCV_HP,           !- Name
   {a0dfccc2-aaea-46d6-bb9d-df7982c59393}, !- Schedule Type Limits Name
   80;                                     !- Value
 
@@ -2027,35 +2027,50 @@ OS:SetpointManager:Scheduled,
   {db9834b2-a7aa-4562-a291-b86f105d6a30}, !- Schedule Name
   {869408e4-cf4f-425f-8ce6-b4e87cbf9c79}; !- Setpoint Node or NodeList Name
 
-
 OS:HeatPump:PlantLoop:EIR:Heating,
-  {D0401ECE-3C0B-4265-A672-D52287EB6835},                              !- Handle
-  ТН_воздух_DCV_HP,                          !- Name
-  AirSource,                              !- Condenser Type
+  {D0401ECE-3C0B-4265-A672-D52287EB6835}, !- Handle
+  ТН_воздух_DCV_HP,               !- Name
   ,                                       !- Load Side Inlet Node Name
   ,                                       !- Load Side Outlet Node Name
+  AirSource,                              !- Condenser Type
   ,                                       !- Source Side Inlet Node Name
   ,                                       !- Source Side Outlet Node Name
-  {F2E41C53-078B-487C-9857-EC63CD1DAB35},                       !- Heating Capacity Modifier Function of Temperature Curve Name
-  {67ECD3F1-D7AC-487E-A185-B18852391A2C},                           !- Electric Input to Heating Output Ratio Modifier Function of Temperature Curve Name
-  {3E9CDB21-0A81-43F6-BBFC-BD8740B71487},                         !- Electric Input to Heating Output Ratio Modifier Function of PLR Curve Name
-  autosize,                               !- Reference Load Side Flow Rate {m3/s}
-  autosize,                               !- Reference Source Side Flow Rate {m3/s}
-  autosize,                               !- Reference Heating Capacity {W}
+  ,                                       !- Heat Recovery Inlet Node Name
+  ,                                       !- Heat Recovery Outlet Node Name
+  ,                                       !- Companion Heat Pump Name
+  Autosize,                               !- Load Side Reference Flow Rate {m3/s}
+  Autosize,                               !- Source Side Reference Flow Rate {m3/s}
+  Autosize,                               !- Heat Recovery Reference Flow Rate {m3/s}
+  Autosize,                               !- Reference Capacity {W}
   2.5,                                    !- Reference Coefficient of Performance {W/W}
   1,                                      !- Sizing Factor
-  ,                                       !- Companion Cooling Heat Pump Name
+  {f2e41c53-078b-487c-9857-ec63cd1dab35}, !- Capacity Modifier Function of Temperature Curve Name
+  {67ecd3f1-d7ac-487e-a185-b18852391a2c}, !- Electric Input to Output Ratio Modifier Function of Temperature Curve Name
+  {3e9cdb21-0a81-43f6-bbfc-bd8740b71487}, !- Electric Input to Output Ratio Modifier Function of Part Load Ratio Curve Name
+  1,                                      !- Heating To Cooling Capacity Sizing Ratio
+  HeatingCapacity,                        !- Heat Pump Sizing Method
+  Setpoint,                               !- Control Type
   ConstantFlow,                           !- Flow Mode
   0,                                      !- Minimum Part Load Ratio
   -20,                                    !- Minimum Source Inlet Temperature {C}
   40,                                     !- Maximum Source Inlet Temperature {C}
-  ,                                       !- Minimum Supply Water Inlet Temperature {C}
-  ,                                       !- Maximum Supply Water Inlet Temperature {C}
-  Setpoint;                               !- Control Type
+  ,                                       !- Minimum Supply Water Temperature Curve Name
+  ,                                       !- Maximum Supply Water Temperature Curve Name
+  ,                                       !- Dry Outdoor Correction Factor Curve Name
+  10,                                     !- Maximum Outdoor Dry Bulb Temperature For Defrost Operation
+  None,                                   !- Heat Pump Defrost Control
+  0.058333,                               !- Heat Pump Defrost Time Period Fraction
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Timed Empirical Defrost Frequency Curve Name
+  ,                                       !- Timed Empirical Defrost Heat Load Penalty Curve Name
+  ,                                       !- Timed Empirical Defrost Heat Input Energy Fraction Curve Name
+  4.5,                                    !- Minimum Heat Recovery Outlet Temperature {C}
+  ,                                       !- Heat Recovery Capacity Modifier Function of Temperature Curve Name
+  ;                                       !- Heat Recovery Electric Input to Output Ratio Modifier Function of Temperature Curve Name
 
 OS:Curve:Biquadratic,
-  {F2E41C53-078B-487C-9857-EC63CD1DAB35},                       !- Handle
-  ТН_воздух_DCV_HP_CapModFT,                 !- Name
+  {F2E41C53-078B-487C-9857-EC63CD1DAB35}, !- Handle
+  ТН_воздух_DCV_HP_CapModFT,      !- Name
   1.0,                                    !- Coefficient1 Constant
   0.0,                                    !- Coefficient2 x
   0.0,                                    !- Coefficient3 x**2
@@ -2068,13 +2083,13 @@ OS:Curve:Biquadratic,
   100,                                    !- Maximum Value of y
   ,                                       !- Minimum Curve Output
   ,                                       !- Maximum Curve Output
-  Dimensionless,                          !- Input Unit Type for x
-  Dimensionless,                          !- Input Unit Type for y
+  Dimensionless,                          !- Input Unit Type for X
+  Dimensionless,                          !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
 
 OS:Curve:Biquadratic,
-  {67ECD3F1-D7AC-487E-A185-B18852391A2C},                           !- Handle
-  ТН_воздух_DCV_HP_EIRModFT,                 !- Name
+  {67ECD3F1-D7AC-487E-A185-B18852391A2C}, !- Handle
+  ТН_воздух_DCV_HP_EIRModFT,      !- Name
   1.0,                                    !- Coefficient1 Constant
   0.0,                                    !- Coefficient2 x
   0.0,                                    !- Coefficient3 x**2
@@ -2087,13 +2102,13 @@ OS:Curve:Biquadratic,
   100,                                    !- Maximum Value of y
   ,                                       !- Minimum Curve Output
   ,                                       !- Maximum Curve Output
-  Dimensionless,                          !- Input Unit Type for x
-  Dimensionless,                          !- Input Unit Type for y
+  Dimensionless,                          !- Input Unit Type for X
+  Dimensionless,                          !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
 
 OS:Curve:Quadratic,
-  {3E9CDB21-0A81-43F6-BBFC-BD8740B71487},                         !- Handle
-  ТН_воздух_DCV_HP_EIRModPLR,                !- Name
+  {3E9CDB21-0A81-43F6-BBFC-BD8740B71487}, !- Handle
+  ТН_воздух_DCV_HP_EIRModPLR,     !- Name
   1.0,                                    !- Coefficient1 Constant
   0.0,                                    !- Coefficient2 x
   0.0,                                    !- Coefficient3 x**2
@@ -2126,12 +2141,12 @@ OS:Connection,
   {51c8e993-de7c-406f-845e-a42645bca267}, !- Handle
   {ed837f40-f7d9-4652-9b97-e665b46f4fb0}, !- Source Object
   3,                                      !- Outlet Port
-  {029d4df8-b8f8-4c38-b3a5-a2985215ad61}, !- Target Object
+  {d0401ece-3c0b-4265-a672-d52287eb6835}, !- Target Object
   2;                                      !- Inlet Port
 
 OS:Connection,
   {719223f4-4b25-477a-a674-223c7c24d59c}, !- Handle
-  {029d4df8-b8f8-4c38-b3a5-a2985215ad61}, !- Source Object
+  {d0401ece-3c0b-4265-a672-d52287eb6835}, !- Source Object
   3,                                      !- Outlet Port
   {db224958-30ef-4f4b-a74d-c8d05e8d66fd}, !- Target Object
   2;                                      !- Inlet Port
@@ -2145,7 +2160,7 @@ OS:Connection,
 
 OS:Pump:ConstantSpeed,
   {e602792b-e6a1-4148-aa1b-3bb886a194db}, !- Handle
-  Насос_ИТП_DCV_HP,                  !- Name
+  Насос_ИТП_DCV_HP,               !- Name
   {ab6b663f-eb25-4ce3-943e-6e69d99a7c08}, !- Inlet Node Name
   {acf98d15-978e-491c-a032-54d2d75d9450}, !- Outlet Node Name
   autosize,                               !- Rated Flow Rate {m3/s}
