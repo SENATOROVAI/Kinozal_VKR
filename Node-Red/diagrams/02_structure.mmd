@@ -1,0 +1,26 @@
+flowchart LR
+    subgraph Field["Полевой уровень"]
+        S1["Датчик CO2 №1"]
+        S2["Датчик CO2 №2"]
+        VFD1["ЧП приточного вентилятора"]
+        VFD2["ЧП вытяжного вентилятора"]
+    end
+
+    subgraph PLC["Уровень сопряжения"]
+        CTRL["ПЛК ОВЕН ПЛК110-220.60.Р"]
+    end
+
+    subgraph Upper["Верхний уровень"]
+        NR["Node-RED на IPC"]
+        DASH["Веб-панель и архив"]
+    end
+
+    S1 -->|"RS-485 / Modbus RTU"| CTRL
+    S2 -->|"RS-485 / Modbus RTU"| CTRL
+    CTRL -->|"Телеметрия и статусы"| NR
+    NR -->|"Уставки и режимы"| CTRL
+    CTRL -->|"AO 0-10 В"| VFD1
+    CTRL -->|"AO 0-10 В"| VFD2
+    VFD1 -->|"Частота, ток, fault"| CTRL
+    VFD2 -->|"Частота, ток, fault"| CTRL
+    NR --> DASH

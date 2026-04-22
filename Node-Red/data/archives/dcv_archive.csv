@@ -1,0 +1,2 @@
+timestamp_iso,active_mode,schedule_mode,manual_mode,sensor1_ppm,sensor2_ppm,selected_co2_ppm,position_percent,frequency_hz,airflow_m3h,command_voltage,estimated_power_kw,warning_active,alarm_active,reserve_active
+2026-04-22T19:37:09.270Z,manual_force100,prestart,force100,550,540,550,100,50,4050,10,1.97,false,false,false
