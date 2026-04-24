@@ -1,0 +1,85 @@
+// fn_norm_input — нормализация телеметрии ПЛК
+let payload = msg.payload;
+if (typeof payload === "string") {
+    try {
+        payload = JSON.parse(payload);
+    } catch (error) {
+        payload = {};
+    }
+}
+if (!payload || typeof payload !== "object") {
+    payload = {};
+}
+const scheduleModes = new Set(["night", "prestart", "session", "intermission"]);
+msg.kind = "measurement";
+msg.payload = {
+    sensor1: payload.sensor1,
+    sensor2: payload.sensor2,
+    scheduleMode: scheduleModes.has(payload.scheduleMode) ? payload.scheduleMode : undefined,
+    timestampMs: payload.timestampMs,
+    source: payload.source || "plc_telemetry"
+};
+return msg;
+
+// fn_norm_manual — нормализация команды оператора
+let payload = msg.payload;
+if (typeof payload === "string") {
+    try {
+        payload = JSON.parse(payload);
+    } catch (error) {
+        payload = { manualMode: msg.payload };
+    }
+}
+if (!payload || typeof payload !== "object") {
+    payload = { manualMode: msg.payload };
+}
+msg.kind = "manual";
+msg.payload = {
+    manualMode: payload.manualMode,
+    timestampMs: payload.timestampMs
+};
+return msg;
+
+// fn_norm_feedback — нормализация обратной связи ЧП
+let payload = msg.payload;
+if (typeof payload === "string") {
+    try {
+        payload = JSON.parse(payload);
+    } catch (error) {
+        payload = {};
+    }
+}
+if (!payload || typeof payload !== "object") {
+    payload = {};
+}
+function normalizeNumber(value) {
+    if (value === null || value === undefined || value === "") {
+        return null;
+    }
+    const numeric = Number(value);
+    return Number.isFinite(numeric) ? numeric : null;
+}
+function normalizeBool(value, fallback) {
+    if (value === undefined || value === null || value === "") {
+        return fallback;
+    }
+    if (value === true || value === 1 || value === "1" || value === "true") {
+        return true;
+    }
+    if (value === false || value === 0 || value === "0" || value === "false") {
+        return false;
+    }
+    return Boolean(value);
+}
+msg.kind = "feedback";
+msg.payload = {
+    supplyFrequencyHz: normalizeNumber(payload.supplyFrequencyHz),
+    exhaustFrequencyHz: normalizeNumber(payload.exhaustFrequencyHz),
+    supplyCurrentA: normalizeNumber(payload.supplyCurrentA),
+    exhaustCurrentA: normalizeNumber(payload.exhaustCurrentA),
+    supplyFault: normalizeBool(payload.supplyFault, false),
+    exhaustFault: normalizeBool(payload.exhaustFault, false),
+    plcLinkOk: normalizeBool(payload.plcLinkOk, true),
+    timestampMs: payload.timestampMs
+};
+return msg;

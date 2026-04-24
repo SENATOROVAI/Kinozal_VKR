@@ -1,0 +1,93 @@
+// fn_plc_payload — построение управляющей посылки для ПЛК
+const control = msg.payload || {};
+const command = {
+    timestampMs: control.timestampMs,
+    timestampIso: control.timestampIso,
+    transport: "plc_command",
+    activeMode: control.activeMode,
+    reason: control.reason,
+    analogOutputs: {
+        supplyFanRefVoltage: control.commandVoltage,
+        exhaustFanRefVoltage: control.commandVoltage
+    },
+    setpoints: {
+        supplyFrequencyHz: control.frequencyHz,
+        exhaustFrequencyHz: control.frequencyHz,
+        airflowM3h: control.airflowM3h,
+        selectedCo2Ppm: control.selectedCo2
+    },
+    discreteOutputs: {
+        warningLamp: control.warningActive,
+        alarmLamp: control.alarmActive,
+        alarmSiren: control.alarmActive,
+        reserveMode: control.reserveActive
+    },
+    diagnostics: {
+        scheduleMode: control.scheduleMode,
+        manualMode: control.manualMode,
+        measurementTimeoutActive: control.measurementTimeoutActive,
+        validSensorCount: control.validSensorCount,
+        plcLinkOk: control.plcLinkOk
+    }
+};
+return [{ ...msg, payload: command }, { payload: JSON.stringify(command) + "\n" }];
+
+// fn_feedback_status — актуализация обратной связи и журнал аварий
+const defaults = {
+    manualMode: "auto",
+    scheduleMode: "night",
+    sensor1: null,
+    sensor2: null,
+    lastMeasurementTs: null,
+    lowCo2Since: null,
+    lastControl: null,
+    lastFeedback: null
+};
+const state = Object.assign({}, defaults, flow.get("dcvState") || {});
+const input = msg.payload || {};
+const parsedTs = Number(input.timestampMs);
+const now = Number.isFinite(parsedTs) ? parsedTs : Date.now();
+state.lastFeedback = {
+    timestampMs: now,
+    timestampIso: new Date(now).toISOString(),
+    plcLinkOk: input.plcLinkOk !== false,
+    supplyFrequencyHz: input.supplyFrequencyHz,
+    exhaustFrequencyHz: input.exhaustFrequencyHz,
+    supplyCurrentA: input.supplyCurrentA,
+    exhaustCurrentA: input.exhaustCurrentA,
+    supplyFault: input.supplyFault === true,
+    exhaustFault: input.exhaustFault === true
+};
+if (state.lastControl) {
+    state.lastControl = {
+        ...state.lastControl,
+        feedbackAvailable: true,
+        plcLinkOk: state.lastFeedback.plcLinkOk,
+        supplyActualFrequencyHz: state.lastFeedback.supplyFrequencyHz,
+        exhaustActualFrequencyHz: state.lastFeedback.exhaustFrequencyHz,
+        supplyCurrentA: state.lastFeedback.supplyCurrentA,
+        exhaustCurrentA: state.lastFeedback.exhaustCurrentA,
+        supplyFault: state.lastFeedback.supplyFault,
+        exhaustFault: state.lastFeedback.exhaustFault
+    };
+}
+flow.set("dcvState", state);
+const responseMsg = {
+    ...msg,
+    statusCode: 200,
+    payload: {
+        accepted: true,
+        feedback: state.lastFeedback
+    }
+};
+const abnormal = !state.lastFeedback.plcLinkOk
+    || state.lastFeedback.supplyFault
+    || state.lastFeedback.exhaustFault;
+const logMsg = abnormal ? {
+    payload: JSON.stringify({
+        timestampIso: state.lastFeedback.timestampIso,
+        event: "plc_feedback_abnormal",
+        feedback: state.lastFeedback
+    }) + "\n"
+} : null;
+return [responseMsg, logMsg];

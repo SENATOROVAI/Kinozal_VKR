@@ -1,5 +1,5 @@
 module.exports = {
-  credentialSecret: "kinozal-dcv-2026",
+  credentialSecret: "CHANGE_ME_ON_DEPLOY",
   flowFile: "flows.json",
   uiPort: process.env.PORT || 1881,
   diagnostics: {

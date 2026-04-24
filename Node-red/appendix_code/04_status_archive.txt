@@ -1,0 +1,74 @@
+// fn_status — ответ на запрос GET /kinozal-dcv/status
+const state = flow.get("dcvState") || {};
+const now = Date.now();
+const lastMeasurementTs = state.lastMeasurementTs ?? null;
+const lastMeasurementAgeMs = lastMeasurementTs === null
+    ? null
+    : Math.max(0, now - lastMeasurementTs);
+msg.statusCode = 200;
+msg.payload = {
+    lastControl: state.lastControl || {
+        message: "no_data",
+        note: "Контроллер еще не получил ни одного измерения"
+    },
+    lastFeedback: state.lastFeedback || null,
+    measurement: {
+        lastTimestampMs: lastMeasurementTs,
+        lastTimestampIso: lastMeasurementTs === null
+            ? null
+            : new Date(lastMeasurementTs).toISOString(),
+        ageMs: lastMeasurementAgeMs,
+        stale: lastMeasurementTs === null ? true : lastMeasurementAgeMs > 60 * 1000
+    }
+};
+return msg;
+
+// fn_archive_snapshot — периодическая запись архива в CSV
+const state = flow.get("dcvState") || {};
+if (!state.lastControl) {
+    if (msg.req && msg.res) {
+        return [null, { ...msg, statusCode: 409, payload: { archived: false, reason: "no_data" } }];
+    }
+    return null;
+}
+const item = state.lastControl;
+let payload = "";
+if (!context.get("headerWritten")) {
+    payload += [
+        "timestamp_iso", "active_mode", "schedule_mode", "manual_mode",
+        "sensor1_ppm", "sensor2_ppm", "selected_co2_ppm",
+        "position_percent", "frequency_hz", "airflow_m3h",
+        "command_voltage", "estimated_power_kw",
+        "warning_active", "alarm_active", "reserve_active"
+    ].join(",") + "\n";
+    context.set("headerWritten", true);
+}
+payload += [
+    item.timestampIso,
+    item.activeMode,
+    item.scheduleMode,
+    item.manualMode,
+    item.sensor1Ppm ?? "",
+    item.sensor2Ppm ?? "",
+    item.selectedCo2 ?? "",
+    item.positionPercent,
+    item.frequencyHz,
+    item.airflowM3h,
+    item.commandVoltage,
+    item.estimatedPowerKw,
+    item.warningActive,
+    item.alarmActive,
+    item.reserveActive
+].join(",") + "\n";
+const fileMsg = { payload };
+const responseMsg = msg.req && msg.res ? {
+    ...msg,
+    statusCode: 200,
+    payload: {
+        archived: true,
+        file: "../data/archives/dcv_archive.csv",
+        timestampIso: item.timestampIso,
+        activeMode: item.activeMode
+    }
+} : null;
+return [fileMsg, responseMsg];

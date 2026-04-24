@@ -1,0 +1,257 @@
+const constants = {
+    airflowMin: 3240,
+    airflowNominal: 4050,
+    co2Min: 400,
+    co2Set: 600,
+    co2Low: 450,
+    co2Warning: 1200,
+    co2Alarm: 1400,
+    frequencyMin: 40,
+    frequencyNominal: 50,
+    nominalPowerKw: 1.97,
+    lowCo2DelayMs: 15 * 60 * 1000,
+    measurementTimeoutMs: 60 * 1000
+};
+const allowedManualModes = new Set([
+    "auto", "night", "prestart", "session", "intermission", "force100"
+]);
+const allowedScheduleModes = new Set([
+    "night", "prestart", "session", "intermission"
+]);
+
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
+
+function normalizeSensor(value) {
+    if (value === null || value === undefined || value === "") {
+        return null;
+    }
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+        return null;
+    }
+    if (numeric < 400 || numeric > 5000) {
+        return null;
+    }
+    return numeric;
+}
+
+function fixedOutput(modeName, percentValue) {
+    const ratio = clamp((percentValue - 80) / 20, 0, 1);
+    const fMin = constants.frequencyMin;
+    const fSpan = constants.frequencyNominal - constants.frequencyMin;
+    return {
+        activeMode: modeName,
+        positionPercent: Number(percentValue.toFixed(2)),
+        airflowM3h: Number(
+            (constants.airflowNominal * (percentValue / 100)).toFixed(2)
+        ),
+        frequencyHz: Number((fMin + fSpan * ratio).toFixed(2))
+    };
+}
+
+function sessionOutput(selectedCo2) {
+    const ratio = clamp(
+        (selectedCo2 - constants.co2Min) / (constants.co2Set - constants.co2Min),
+        0, 1
+    );
+    const aMin = constants.airflowMin;
+    const aSpan = constants.airflowNominal - constants.airflowMin;
+    const fMin = constants.frequencyMin;
+    const fSpan = constants.frequencyNominal - constants.frequencyMin;
+    return {
+        activeMode: "session",
+        positionPercent: Number((80 + 20 * ratio).toFixed(2)),
+        airflowM3h: Number((aMin + aSpan * ratio).toFixed(2)),
+        frequencyHz: Number((fMin + fSpan * ratio).toFixed(2))
+    };
+}
+
+const defaults = {
+    manualMode: "auto",
+    scheduleMode: "night",
+    sensor1: null,
+    sensor2: null,
+    lastMeasurementTs: null,
+    lowCo2Since: null,
+    lastControl: null,
+    lastFeedback: null
+};
+const state = Object.assign({}, defaults, flow.get("dcvState") || {});
+const input = msg.payload || {};
+const parsedTs = Number(input.timestampMs);
+const now = Number.isFinite(parsedTs) ? parsedTs : Date.now();
+
+if (msg.kind === "manual") {
+    const requestedMode = typeof input.manualMode === "string"
+        ? input.manualMode.trim()
+        : "";
+    if (!allowedManualModes.has(requestedMode)) {
+        const errorPayload = {
+            error: "Некорректная команда ручного режима",
+            allowed: Array.from(allowedManualModes)
+        };
+        const responseMsg = msg.req && msg.res
+            ? { ...msg, statusCode: 400, payload: errorPayload }
+            : null;
+        const logEntry = {
+            timestampIso: new Date(now).toISOString(),
+            event: "invalid_manual_mode",
+            requestedMode
+        };
+        return [
+            responseMsg,
+            null,
+            { payload: JSON.stringify(logEntry) + "\n" }
+        ];
+    }
+    state.manualMode = requestedMode;
+}
+
+if (msg.kind === "measurement") {
+    if (Object.prototype.hasOwnProperty.call(input, "sensor1")) {
+        state.sensor1 = normalizeSensor(input.sensor1);
+    }
+    if (Object.prototype.hasOwnProperty.call(input, "sensor2")) {
+        state.sensor2 = normalizeSensor(input.sensor2);
+    }
+    if (allowedScheduleModes.has(input.scheduleMode)) {
+        state.scheduleMode = input.scheduleMode;
+    }
+    state.lastMeasurementTs = now;
+}
+
+const validSensors = [state.sensor1, state.sensor2]
+    .filter((value) => value !== null);
+const selectedCo2 = validSensors.length
+    ? Math.max(...validSensors)
+    : null;
+if (selectedCo2 !== null && selectedCo2 < constants.co2Low) {
+    if (state.lowCo2Since === null) {
+        state.lowCo2Since = now;
+    }
+} else {
+    state.lowCo2Since = null;
+}
+const lowCo2LongEnough = state.lowCo2Since !== null
+    && now - state.lowCo2Since >= constants.lowCo2DelayMs;
+const lastMeasurementAgeMs = state.lastMeasurementTs === null
+    ? null
+    : Math.max(0, now - state.lastMeasurementTs);
+const measurementTimeoutActive = state.lastMeasurementTs === null
+    || lastMeasurementAgeMs > constants.measurementTimeoutMs;
+
+let control;
+let warningActive = selectedCo2 !== null
+    && selectedCo2 >= constants.co2Warning;
+let alarmActive = selectedCo2 !== null
+    && selectedCo2 >= constants.co2Alarm;
+let reserveActive = false;
+let reason = "auto";
+
+if (validSensors.length === 0) {
+    reserveActive = true;
+    alarmActive = true;
+    warningActive = true;
+    control = fixedOutput("reserve", 100);
+    reason = "sensor_failure_both";
+} else if (measurementTimeoutActive) {
+    reserveActive = true;
+    alarmActive = true;
+    warningActive = true;
+    control = fixedOutput("reserve", 100);
+    reason = "measurement_timeout";
+} else if (alarmActive) {
+    control = fixedOutput("alarm", 100);
+    reason = "alarm_threshold";
+} else if (state.manualMode !== "auto") {
+    reason = "manual_override";
+    if (state.manualMode === "force100") {
+        control = fixedOutput("manual_force100", 100);
+    } else if (state.manualMode === "night") {
+        control = fixedOutput("manual_night", 80);
+    } else if (state.manualMode === "prestart") {
+        control = fixedOutput("manual_prestart", 100);
+    } else if (state.manualMode === "intermission") {
+        control = fixedOutput("manual_intermission", 80);
+    } else if (state.manualMode === "session") {
+        control = sessionOutput(selectedCo2);
+        control.activeMode = "manual_session";
+    } else {
+        control = fixedOutput("manual_auto_fallback", 80);
+    }
+} else if (state.scheduleMode === "prestart") {
+    control = fixedOutput("prestart", 100);
+    reason = "schedule_prestart";
+} else if (state.scheduleMode === "intermission") {
+    control = fixedOutput("intermission", 80);
+    reason = "schedule_intermission";
+} else if (lowCo2LongEnough || state.scheduleMode === "night") {
+    control = fixedOutput("night", 80);
+    reason = lowCo2LongEnough
+        ? "co2_below_450_for_15m"
+        : "schedule_night";
+} else {
+    control = sessionOutput(selectedCo2);
+    reason = "session_dcv";
+}
+
+control.commandVoltage = Number(
+    (10 * control.frequencyHz / constants.frequencyNominal).toFixed(2)
+);
+control.estimatedPowerKw = Number((
+    constants.nominalPowerKw
+        * Math.pow(
+            control.frequencyHz / constants.frequencyNominal,
+            3
+        )
+).toFixed(3));
+control.warningActive = warningActive;
+control.alarmActive = alarmActive;
+control.reserveActive = reserveActive;
+control.selectedCo2 = selectedCo2;
+control.sensor1Ppm = state.sensor1;
+control.sensor2Ppm = state.sensor2;
+control.validSensorCount = validSensors.length;
+control.scheduleMode = state.scheduleMode;
+control.manualMode = state.manualMode;
+control.reason = reason;
+control.timestampMs = now;
+control.timestampIso = new Date(now).toISOString();
+control.lastMeasurementTs = state.lastMeasurementTs;
+control.lastMeasurementIso = state.lastMeasurementTs === null
+    ? null
+    : new Date(state.lastMeasurementTs).toISOString();
+control.lastMeasurementAgeMs = lastMeasurementAgeMs;
+control.measurementTimeoutActive = measurementTimeoutActive;
+control.feedbackAvailable = state.lastFeedback !== null;
+control.plcLinkOk = state.lastFeedback
+    ? state.lastFeedback.plcLinkOk : null;
+control.supplyActualFrequencyHz = state.lastFeedback
+    ? state.lastFeedback.supplyFrequencyHz : null;
+control.exhaustActualFrequencyHz = state.lastFeedback
+    ? state.lastFeedback.exhaustFrequencyHz : null;
+control.supplyCurrentA = state.lastFeedback
+    ? state.lastFeedback.supplyCurrentA : null;
+control.exhaustCurrentA = state.lastFeedback
+    ? state.lastFeedback.exhaustCurrentA : null;
+control.supplyFault = state.lastFeedback
+    ? state.lastFeedback.supplyFault : null;
+control.exhaustFault = state.lastFeedback
+    ? state.lastFeedback.exhaustFault : null;
+control.alarmStateLabel = reserveActive
+    ? "reserve"
+    : alarmActive
+        ? "alarm"
+        : warningActive ? "warning" : "normal";
+
+state.lastControl = control;
+flow.set("dcvState", state);
+
+const responseMsg = msg.req && msg.res
+    ? { ...msg, statusCode: 200, payload: control }
+    : null;
+const dashboardMsg = { payload: control, topic: "dcvState" };
+const logMsg = { payload: JSON.stringify(control) + "\n" };
+return [responseMsg, dashboardMsg, logMsg];
